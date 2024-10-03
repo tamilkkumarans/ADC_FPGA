@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ps // Specifies the time unit for the simulation (1ns as the time unit and 1ps as the precision).
 
 module ADC(clk, enable, I1,I2,I3,conv, done, ADC_in, ADC_out, data_out);
 
@@ -17,7 +17,7 @@ module ADC(clk, enable, I1,I2,I3,conv, done, ADC_in, ADC_out, data_out);
 	
 		if (enable == 1) begin
 			case (Cs)
-				0:	begin
+				0:	begin // Initializes the conversion process by setting conv = 0, done = 0, and ADC_in = 1
 						// initial
 						conv 	<= 0;
 						done 	<= 0;
@@ -26,7 +26,7 @@ module ADC(clk, enable, I1,I2,I3,conv, done, ADC_in, ADC_out, data_out);
 						count <= count + 5'b00001; //1
 						data_out <= 0;
 					end
-				1:	begin
+				1:	begin //Same initialization (conv = 0, done = 0) for 2, 3, 4 also
 						// initial
 						conv 	<= 0;
 						done 	<= 0;
@@ -59,7 +59,7 @@ module ADC(clk, enable, I1,I2,I3,conv, done, ADC_in, ADC_out, data_out);
 						count <= count + 5'b00001; //5
 					end
 				
-				5:	begin
+				5:	begin //If count is less than 8, it keeps ADC_in = 0 and continues sampling.
 						
 						if (count < 8) begin
 						conv 	<= 0;
@@ -77,7 +77,7 @@ module ADC(clk, enable, I1,I2,I3,conv, done, ADC_in, ADC_out, data_out);
 						count <= count + 5'b00001;
 						end
 					end
-				6: begin
+				6: begin // If count is less than 17, it keeps sampling.
 				      if (count < 17) begin
                   conv 	<= 0;
 						done 	<= 0;
@@ -96,7 +96,7 @@ module ADC(clk, enable, I1,I2,I3,conv, done, ADC_in, ADC_out, data_out);
 						count <= count + 5'b00001;
 						end
 					end
-				7: begin
+				7: begin // Marks the conversion complete by setting conv = 1 and resetting the state machine.
 				      if (count == 18) begin
                   conv 	<= 1;
 						done 	<= 0;
@@ -106,14 +106,14 @@ module ADC(clk, enable, I1,I2,I3,conv, done, ADC_in, ADC_out, data_out);
 						count <= 0;
 						end
 					end
-				default: begin
+				default: begin //default: Resets all signals to 0 when no other state is active.
 						Cs	<= 0;
 						conv  <= 0;
 						count	<= 0;
 						done	<= 0;
 					end
 			endcase
-		end else begin
+		end else begin //If enable is not active, all internal signals (conv, done, Cs, count, data_out) are reset.
 			// reset
          conv     <= 0;
 			done 		<= 0;
